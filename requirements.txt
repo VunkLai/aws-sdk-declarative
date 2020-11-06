@@ -1,0 +1,10 @@
+attrs
+
+# code style
+pylint
+autopep8
+isort
+
+# testing
+pytest
+pytest-cov
