@@ -51,6 +51,15 @@ class OptionsTestCase(unittest.TestCase):
         assert not option.asdict.get('Metrix', None)
         assert 'DAILY' == option.Granularity
 
+    def test_time_period(self):
+        with self.assertRaises(TypeError):
+            Options(TimePeriod=dict(Start='2020-01-01', End='2020-01-31'))
+
+        with self.assertRaises(TypeError):
+            Options(TimePeriod=10)
+
+        assert Options(TimePeriod=TimePeriod())
+
     def test_filter(self):
         option = Options(Filter=Filter(
             Dimensions={'Key': 'REGION', 'Values': ['us-west-1']}))
