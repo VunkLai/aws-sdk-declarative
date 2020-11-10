@@ -13,14 +13,13 @@ import unittest
 from datetime import date
 
 import attr
-from sdk.cost_explorer.get_cost_and_usage import (Filter, Metrics, Options,
-                                                  TimePeriod)
+from arabela.cost_explorer import get_cost_and_usage as ce
 
 
 class TimePeriodTestCase(unittest.TestCase):
 
     def test_time_period(self):
-        tp = TimePeriod()
+        tp = ce.TimePeriod()
         assert hasattr(tp, 'Start')
         assert hasattr(tp, 'End')
 
@@ -30,42 +29,48 @@ class TimePeriodTestCase(unittest.TestCase):
         assert today.strftime('%F') == tp.asdict['End']
 
     def test_start(self):
-        tp = TimePeriod(Start='1970-01-01')
+        tp = ce.TimePeriod(Start='1970-01-01')
         assert tp.Start == '1970-01-01'
 
     def test_end(self):
-        tp = TimePeriod(End='1970-01-01')
+        tp = ce.TimePeriod(End='1970-01-01')
         assert tp.End == '1970-01-01'
 
 
 class OptionsTestCase(unittest.TestCase):
 
     def test_options(self):
-        option = Options()
+        option = ce.Options()
         assert hasattr(option, 'TimePeriod')
         assert hasattr(option, 'Granularity')
         assert hasattr(option, 'Filter')
         assert hasattr(option, 'Metrics')
 
         assert not option.asdict.get('Filter', None)
-        assert not option.asdict.get('Metrix', None)
+        assert not option.asdict.get('Metrics', None)
         assert 'DAILY' == option.Granularity
 
     def test_time_period(self):
         with self.assertRaises(TypeError):
-            Options(TimePeriod=dict(Start='2020-01-01', End='2020-01-31'))
+            ce.Options(TimePeriod=dict(Start='2020-01-01', End='2020-01-31'))
 
         with self.assertRaises(TypeError):
-            Options(TimePeriod=10)
+            ce.Options(TimePeriod=10)
 
-        assert Options(TimePeriod=TimePeriod())
+        assert ce.Options(TimePeriod=ce.TimePeriod())
 
     def test_filter(self):
-        option = Options(Filter=Filter(
+        option = ce.Options(Filter=ce.Filter(
             Dimensions={'Key': 'REGION', 'Values': ['us-west-1']}))
         assert 'Dimensions' in option.asdict['Filter']
         assert 'REGION' == option.asdict['Filter']['Dimensions']['Key']
 
     def test_metrics(self):
-        option = Options(Metrics=[Metrics.AmortizedCost, Metrics.BlendedCost])
+        option = ce.Options(
+            Metrics=[ce.Metrics.AmortizedCost, ce.Metrics.BlendedCost])
         assert 'AmortizedCost' in option.Metrics
+
+    def test_group_by(self):
+        with self.assertRaises(ValueError):
+            ce.Options(GroupBy=ce.GroupBy(Type='DIMENSION', Key='foo'))
+        assert ce.Options(GroupBy=ce.GroupBy(Type='DIMENSION', Key='SERVICE'))

@@ -73,13 +73,19 @@ class Metrics(StrEnum):
 class GroupBy:
     Type: str = attr.ib(
         default=None,
+        converter=attr.converters.optional(str)
+    )
+    Key: str = attr.ib(
+        default=None,
         converter=attr.converters.optional(str),
         validator=attr.validators.optional(
             attr.validators.in_([
                 'AZ', 'INSTANCE_TYPE', 'LEGAL_ENTITY_NAME', 'LINKED_ACCOUNT',
                 'OPERATION', 'PLATFORM', 'PURCHASE_TYPE', 'SERVICE', 'TAGS',
-                'TENANCY', 'RECORD_TYPE', 'USAGE_TYPE'])))
-    Key: str = attr.ib(default=None)
+                'TENANCY', 'RECORD_TYPE', 'USAGE_TYPE']
+            )
+        )
+    )
 
 
 @attr.s
