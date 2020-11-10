@@ -42,6 +42,9 @@ class TimePeriod(AsDict):
     Start: str = attr.ib(default=date.today(), converter=str)
     End: str = attr.ib(default=date.today(), converter=str)
 
+    # TODO: Add a classmethod to create TimePeriod by period.
+    # EXAMPLE: TimePeriod.weekly() -> TimePeriod(Start=today, End=today-7days)
+
 
 class Granularity(StrEnum):
     DAILY = 'DAILY'
