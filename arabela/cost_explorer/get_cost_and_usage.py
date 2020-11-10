@@ -106,9 +106,12 @@ class Options(AsDict):
             attr.validators.deep_iterable(
                 member_validator=attr.validators.instance_of(str),
                 iterable_validator=attr.validators.instance_of(list))))
-    GroupBy: GroupBy = attr.ib(
+    GroupBy: typing.List[type] = attr.ib(
         default=None,
-        validator=attr.validators.optional(attr.validators.instance_of(GroupBy)))
+        validator=attr.validators.optional(
+            attr.validators.deep_iterable(
+                member_validator=attr.validators.instance_of(GroupBy),
+                iterable_validator=attr.validators.instance_of(list))))
     NextPageToken: str = None
     CliInputJson: str = None
     GenerateCliSkeleton: str = None

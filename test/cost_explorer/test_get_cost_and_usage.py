@@ -72,5 +72,9 @@ class OptionsTestCase(unittest.TestCase):
 
     def test_group_by(self):
         with self.assertRaises(ValueError):
-            ce.Options(GroupBy=ce.GroupBy(Type='DIMENSION', Key='foo'))
-        assert ce.Options(GroupBy=ce.GroupBy(Type='DIMENSION', Key='SERVICE'))
+            ce.Options(GroupBy=[ce.GroupBy(Type='DIMENSION', Key='foo')])
+
+        option = ce.Options(
+            GroupBy=[ce.GroupBy(Type='DIMENSION', Key='SERVICE')])
+        assert isinstance(option.GroupBy, list)
+        assert isinstance(option.asdict['GroupBy'][0], dict)
